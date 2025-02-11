@@ -54,9 +54,11 @@ def process_loop(sheet_key, bluesky_username, bluesky_password):
         print('Processing...')
 
         #grab last post
-        last_post = datetime.fromisoformat(registry.getValue('last_post', None))
+        last_post = registry.getValue('last_post', None)
         if last_post is None:
             last_post = datetime.now()
+        else:
+            last_post = datetime.fromisoformat(last_post)
 
         #grab last sheet entry
         row = None
