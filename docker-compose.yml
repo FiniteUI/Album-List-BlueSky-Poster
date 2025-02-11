@@ -1,0 +1,14 @@
+#build the project from the docker hub image
+name: album-list-bluesky-poster
+
+services:
+  album-list-bluesky-poster:
+    container_name: "album-list-bluesky-poster"
+    image: finiteui/album-list-bluesky-poster:latest
+    restart: unless-stopped
+    env_file: ".env"
+    volumes:
+      - album-list-bluesky-poster-data:/app/Data
+
+volumes:
+  album-list-bluesky-poster-data:
