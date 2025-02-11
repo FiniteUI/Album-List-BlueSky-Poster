@@ -1,7 +1,7 @@
 import dotenv
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from ConfigurationFile import ConfigurationFile
 from AlbumList import AlbumList
 from BlueSky import BlueSky
@@ -48,7 +48,7 @@ def run():
 
 def process_loop(sheet_key, bluesky_username, bluesky_password):
     print('Starting process loop...')
-    registry = ConfigurationFile('registry.json')
+    registry = ConfigurationFile('registry')
 
     while True:
         print('Processing...')
@@ -56,7 +56,7 @@ def process_loop(sheet_key, bluesky_username, bluesky_password):
         #grab last post
         last_post = registry.getValue('last_post', None)
         if last_post is None:
-            last_post = datetime.now()
+            last_post = datetime.now().replace(tzinfo=timezone.utc)
         else:
             last_post = datetime.fromisoformat(last_post)
 
@@ -73,7 +73,7 @@ def process_loop(sheet_key, bluesky_username, bluesky_password):
                 registry.setValue('last_post_contents', contents)
                 registry.setValue('total_posts', registry.getValue('total_posts', 0) + 1)
 
-        registry.setValue('last_process', datetime.now())
+        registry.setValue('last_process', datetime.now().replace(tzinfo=timezone.utc))
         
         #now wait
         print('Processing complete. Sleeping....')

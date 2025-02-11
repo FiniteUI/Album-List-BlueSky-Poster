@@ -1,11 +1,13 @@
 import gspread
 from datetime import date, datetime
+import pytz
 
 class AlbumList:
     def __init__(self, login_file, sheet_key):
         self.gs = gspread.service_account(login_file)
-        self.sheet = self.gs.open_by_key(key=sheet_key).sheet1
-
+        self.workbook = self.gs.open_by_key(key=sheet_key)
+        self.sheet = self.workbook.sheet1
+        
     def __enter__(self):
         return self
 
@@ -18,7 +20,7 @@ class AlbumList:
         date_parts = row[4].split('/')
 
         row_dict = {
-            'Timestamp': datetime.strptime(row[0], '%m/%d/%Y %H:%M:%S'),
+            'Timestamp': datetime.strptime(row[0], '%m/%d/%Y %H:%M:%S').replace(tzinfo=pytz.timezone(self.workbook.timezone)),
             'Artist': row[1],
             'Album': row[2],
             'Release_Year': row[3],
