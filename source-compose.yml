@@ -1,0 +1,18 @@
+#this file is for building the project from the source code
+
+name: album-list-bluesky-poster
+
+services:
+  album-list-bluesky-poster:
+    container_name: "album-list-bluesky-poster"
+    build:
+      context: .
+      dockerfile: Dockerfile.dockerfile
+    image: album-list-bluesky-poster 
+    restart: unless-stopped
+    env_file: ".env"
+    volumes:
+      - album-list-bluesky-poster-data:/app/Data
+
+volumes:
+  album-list-bluesky-poster-data:
