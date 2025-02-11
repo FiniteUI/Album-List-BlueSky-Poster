@@ -57,6 +57,7 @@ def process_loop(sheet_key, bluesky_username, bluesky_password):
         last_post = registry.getValue('last_post', None)
         if last_post is None:
             last_post = datetime.now().replace(tzinfo=timezone.utc)
+            registry.setValue('last_post', last_post)
         else:
             last_post = datetime.fromisoformat(last_post)
 
@@ -66,10 +67,11 @@ def process_loop(sheet_key, bluesky_username, bluesky_password):
             row = sheet.get_last_row()
         
         if row is not None:
+            print(f'Last Row Timestamp: {row['Timestamp']}')
             if row['Timestamp'] > last_post:
                 print('New record found. Sending post...')
                 contents = send_post(row, bluesky_username, bluesky_password)
-                registry.setValue('last_post', datetime.now())
+                registry.setValue('last_post', datetime.now().replace(tzinfo=timezone.utc))
                 registry.setValue('last_post_contents', contents)
                 registry.setValue('total_posts', registry.getValue('total_posts', 0) + 1)
 
