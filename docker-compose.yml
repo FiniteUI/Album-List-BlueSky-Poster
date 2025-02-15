@@ -7,8 +7,14 @@ services:
     image: finiteui/album-list-bluesky-poster:latest
     restart: unless-stopped
     env_file: ".env"
+    secrets: 
+      - google-api-credentials
     volumes:
       - album-list-bluesky-poster-data:/app/Data
 
 volumes:
   album-list-bluesky-poster-data:
+
+secrets:
+  google-api-credentials:
+    file: google-api.json

@@ -9,7 +9,6 @@ COPY AlbumList.py .
 COPY BlueSky.py .
 COPY app.py .
 COPY requirements.txt .
-COPY google-api.json .
 
 RUN pip install -r requirements.txt
 

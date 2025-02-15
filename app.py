@@ -63,7 +63,7 @@ def process_loop(sheet_key, bluesky_username, bluesky_password):
 
         #grab last sheet entry
         row = None
-        with AlbumList('google-api.json', sheet_key) as sheet:
+        with AlbumList('/run/secrets/google-api-credentials', sheet_key) as sheet:
             row = sheet.get_last_row()
         
         if row is not None:
