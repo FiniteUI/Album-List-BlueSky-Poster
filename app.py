@@ -56,26 +56,34 @@ def process_loop(sheet_key, bluesky_username, bluesky_password):
         #grab last post
         last_post = registry.getValue('last_post', None)
         if last_post is None:
-            last_post = datetime.now().replace(tzinfo=timezone.utc)
+            last_post = datetime.now().astimezone()
             registry.setValue('last_post', last_post)
         else:
             last_post = datetime.fromisoformat(last_post)
+        print(f'Last Post Timestamp: {last_post}')
 
         #grab last sheet entry
         row = None
-        with AlbumList('/run/secrets/google-api-credentials', sheet_key) as sheet:
+
+        if os.getenv('DOCKER') is None:
+            credentials = 'google-api.json'
+        else:
+            credentials = '/run/secrets/google-api-credentials'
+
+        with AlbumList(credentials, sheet_key) as sheet:
             row = sheet.get_last_row()
         
         if row is not None:
-            print(f'Last Row Timestamp: {row['Timestamp']}')
-            if row['Timestamp'] > last_post:
+            last_row_timestamp = row['Timestamp']
+            print(f'Last Row Timestamp: {last_row_timestamp}')
+            if last_row_timestamp > last_post:
                 print('New record found. Sending post...')
                 contents = send_post(row, bluesky_username, bluesky_password)
-                registry.setValue('last_post', datetime.now().replace(tzinfo=timezone.utc))
+                registry.setValue('last_post', datetime.now().astimezone())
                 registry.setValue('last_post_contents', contents)
                 registry.setValue('total_posts', registry.getValue('total_posts', 0) + 1)
 
-        registry.setValue('last_process', datetime.now().replace(tzinfo=timezone.utc))
+        registry.setValue('last_process', datetime.now().astimezone())
         
         #now wait
         print('Processing complete. Sleeping....')

@@ -20,7 +20,7 @@ class AlbumList:
         date_parts = row[4].split('/')
 
         row_dict = {
-            'Timestamp': datetime.strptime(row[0], '%m/%d/%Y %H:%M:%S').replace(tzinfo=pytz.timezone(self.workbook.timezone)),
+            'Timestamp': datetime.strptime(row[0], '%m/%d/%Y %H:%M:%S').astimezone(pytz.timezone(self.workbook.timezone)),
             'Artist': row[1],
             'Album': row[2],
             'Release_Year': row[3],
